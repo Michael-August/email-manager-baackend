@@ -4,7 +4,6 @@ const axios = require("axios");
 const { getAccessToken } = require("../../zoho.auth");
 const Employee = require("../models/Employee");
 
-// Function to deactivate employee email in Zoho
 async function deactivateEmailInZoho(email) {
 	try {
 		const accessToken = await getAccessToken();
@@ -12,13 +11,13 @@ async function deactivateEmailInZoho(email) {
 
 		// Fetch the user details from Zoho
 		const userResponse = await axios.get(
-			`https://mail.zoho.com/api/organization/${ZOHO_ORG_ID}/users`,
+			`https://mail.zoho.com/api/organization/${ZOHO_ORG_ID}/accounts/${email}`,
 			{
 				headers: { Authorization: `Zoho-oauthtoken ${accessToken}` },
 			}
 		);
 
-		const user = userResponse.data.data.find((u) => u.email === email);
+		const user = userResponse.data.data;
 		if (!user) {
 			console.log(`User with email ${email} not found in Zoho.`);
 			return;

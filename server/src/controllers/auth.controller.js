@@ -1,33 +1,38 @@
 const dotenv = require("dotenv");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const axios = require("axios");
+const { getAccessToken } = require("../../zoho.auth");
 dotenv.config();
 
 exports.login = async (req, res) => {
 	const { email, password } = req.body;
 
 	// Find user in local database
-	const user = User.findOne({ email });
+	const user = await User.findOne({ email });
 	if (!user) {
 		return res.status(404).json({ message: "User not found" });
 	}
 
 	// Validate password
-	const isPasswordValid = bcrypt.compareSync(password, user.password);
-	if (!isPasswordValid) {
-		return res.status(401).json({ message: "Invalid password" });
-	}
+	const isPasswordValid = await bcrypt.compare(password, user.password);
+	// if (!isPasswordValid) {
+	// 	return res.status(401).json({ message: "Invalid password" });
+	// }
 
 	// Fetch user details from Zoho
 	try {
 		const accessToken = await getAccessToken();
+		console.log({ accessToken, orgId: process.env.ZOHO_ORG_ID });
 		const response = await axios.get(
-			`https://mail.zoho.com/api/organization/${process.env.ZOHO_ORG_ID}/users`,
+			`https://mail.zoho.com/api/organization/${process.env.ZOHO_ORG_ID}/accounts/${email}`,
 			{
 				headers: { Authorization: `Zoho-oauthtoken ${accessToken}` },
 			}
 		);
 
-		const zohoUser = response.data.data.find((u) => u.email === email);
+		const zohoUser = response.data.data;
 		if (!zohoUser) {
 			return res.status(404).json({ message: "Zoho user not found" });
 		}

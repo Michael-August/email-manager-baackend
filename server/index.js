@@ -5,14 +5,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+require("./src/controllers/deactivateUser.controller");
+
 const {
 	createEmployee,
 	getEmployees,
+	getEmployee,
 	updateEmployee,
 	deleteEmployee,
 } = require("./src/controllers/Employee.controller");
 
 const { login } = require("./src/controllers/auth.controller");
+const { verifyToken, checkRole } = require("./src/middlewares/auth.middleware");
 
 const app = express();
 
@@ -22,10 +26,16 @@ app.use(cors());
 
 app.post("/api/login", login);
 
-app.post("/api/employees", createEmployee);
-app.get("/api/employees", getEmployees);
-app.put("/api/employees/:id", updateEmployee);
-app.delete("/api/employees/:id", deleteEmployee);
+app.post("/api/employees", verifyToken, checkRole("admin"), createEmployee);
+app.get("/api/employees", verifyToken, checkRole("admin"), getEmployees);
+app.get("/api/employees/:id", verifyToken, checkRole("admin"), getEmployee);
+app.put("/api/employees/:id", verifyToken, checkRole("admin"), updateEmployee);
+app.delete(
+	"/api/employees/:id",
+	verifyToken,
+	checkRole("admin"),
+	deleteEmployee
+);
 
 const port = 4000 || process.env.PORT;
 
