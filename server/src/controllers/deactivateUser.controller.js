@@ -65,7 +65,7 @@ async function checkResignationDates() {
 	}
 }
 
-cron.schedule("0 0 * * *", () => {
+cron.schedule("* * * * *", () => {
 	console.log("Running daily check for employee resignation dates...");
 	checkResignationDates();
 });

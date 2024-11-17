@@ -24,7 +24,6 @@ exports.login = async (req, res) => {
 	// Fetch user details from Zoho
 	try {
 		const accessToken = await getAccessToken();
-		console.log({ accessToken, orgId: process.env.ZOHO_ORG_ID });
 		const response = await axios.get(
 			`https://mail.zoho.com/api/organization/${process.env.ZOHO_ORG_ID}/accounts/${email}`,
 			{
