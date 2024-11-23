@@ -37,6 +37,8 @@ async function deactivateEmailInZoho(email) {
 			{ headers: { Authorization: `Zoho-oauthtoken ${accessToken}` } }
 		);
 
+		await Employee.findOneAndUpdate({ email }, { disabled: true });
+
 		console.log(`Successfully deactivated email for ${email} in Zoho.`);
 	} catch (error) {
 		console.error(
@@ -65,7 +67,7 @@ async function checkResignationDates() {
 	}
 }
 
-cron.schedule("* * * * *", () => {
+cron.schedule("0 0 * * *", () => {
 	console.log("Running daily check for employee resignation dates...");
 	checkResignationDates();
 });

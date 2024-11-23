@@ -36,6 +36,8 @@ exports.createEmployee = async (req, res) => {
 			});
 		}
 
+		const existingUser = await Employee.findOne({ email });
+
 		const employee = new Employee(req.body);
 		await employee.save();
 		res.status(201).json({
