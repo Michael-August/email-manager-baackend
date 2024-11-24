@@ -15,7 +15,7 @@ const {
 	deleteEmployee,
 } = require("./src/controllers/Employee.controller");
 
-const { login } = require("./src/controllers/auth.controller");
+const { login, signUp } = require("./src/controllers/auth.controller");
 const { verifyToken, checkRole } = require("./src/middlewares/auth.middleware");
 
 const app = express();
@@ -25,9 +25,10 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/api/login", login);
+app.post("/api/signup", signUp);
 
 app.post("/api/employees", verifyToken, checkRole("admin"), createEmployee);
-app.get("/api/employees", verifyToken, checkRole("admin"), getEmployees);
+app.get("/api/employees", verifyToken, getEmployees);
 app.get("/api/employees/:id", verifyToken, checkRole("admin"), getEmployee);
 app.put("/api/employees/:id", verifyToken, checkRole("admin"), updateEmployee);
 app.delete(
