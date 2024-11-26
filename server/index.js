@@ -38,7 +38,7 @@ app.delete(
 	deleteEmployee
 );
 
-const port = 4000 || process.env.PORT;
+const port = 4000;
 
 const startApp = async (url) => {
 	try {
