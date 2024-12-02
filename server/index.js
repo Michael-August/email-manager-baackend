@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 require("./src/controllers/deactivateUser.controller");
+require("./src/controllers/emailReminder.controller");
 
 const {
 	createEmployee,
