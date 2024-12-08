@@ -2,6 +2,7 @@ const Employee = require("../models/Employee");
 const { getAccessToken } = require("../../zoho.auth");
 
 const axios = require("axios");
+const AllEmployee = require("../models/AllEmployee");
 
 // Helper function to check if a user exists
 async function checkUserExists(email) {
@@ -27,21 +28,25 @@ async function checkUserExists(email) {
 }
 
 exports.createEmployee = async (req, res) => {
-	const { email } = req.body;
 	try {
-		const user = await checkUserExists(email);
+		const employee = await AllEmployee.findById(req.body.employeeId);
+
+		const user = await checkUserExists(employee.email);
 		if (!user) {
 			res.status(404).json({
 				message: "User not found, provide a valid organization user",
 			});
 		}
 
-		const existingUser = await Employee.findOne({ email });
+		// const existingUser = await Employee.findOne({ email });
 
-		const employee = new Employee(req.body);
-		await employee.save();
+		const exitingEmployee = new Employee({
+			...req.body,
+			email: employee.email,
+		});
+		await exitingEmployee.save();
 		res.status(201).json({
-			data: employee,
+			data: exitingEmployee,
 			message: "Creation successful",
 		});
 	} catch (error) {

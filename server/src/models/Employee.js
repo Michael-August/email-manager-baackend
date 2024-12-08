@@ -12,6 +12,11 @@ const employeeSchema = new mongoose.Schema({
 		trim: true,
 		lowercase: true,
 	},
+	employeeId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "AllEmployee",
+		required: true,
+	},
 	resignationDate: {
 		type: Date,
 		required: true,

@@ -30,7 +30,7 @@ const sendScheduledEmail = () => {
 };
 
 // Example: Schedule the email to be sent every day at 9:00 AM
-cron.schedule("* * * * *", () => {
+cron.schedule("0 0 * * *", () => {
 	console.log("Running scheduled task: Sending email");
 	sendScheduledEmail();
 });

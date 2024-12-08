@@ -18,6 +18,14 @@ const {
 
 const { login, signUp } = require("./src/controllers/auth.controller");
 const { verifyToken, checkRole } = require("./src/middlewares/auth.middleware");
+const {
+	onboardEmployee,
+	getAllEmployees,
+	assignProperty,
+	getPropertiesOfEmployee,
+	returnProperty,
+} = require("./src/controllers/AllEmployee.controller");
+const { createProperty } = require("./src/controllers/Properties.controller");
 
 const app = express();
 
@@ -27,6 +35,29 @@ app.use(cors());
 
 app.post("/api/login", login);
 app.post("/api/signup", signUp);
+
+app.post("/api/allEmployee", verifyToken, checkRole("admin"), onboardEmployee);
+app.get("/api/allEmployee", verifyToken, getAllEmployees);
+app.put(
+	"/api/allEmployee/assign",
+	verifyToken,
+	checkRole("admin"),
+	assignProperty
+);
+app.get(
+	"/api/allEmployee/:id/properties",
+	verifyToken,
+	checkRole("admin"),
+	getPropertiesOfEmployee
+);
+app.put(
+	"/api/allEmployee/return",
+	verifyToken,
+	checkRole("admin"),
+	returnProperty
+);
+
+app.post("/api/property", createProperty);
 
 app.post("/api/employees", verifyToken, checkRole("admin"), createEmployee);
 app.get("/api/employees", verifyToken, getEmployees);
